@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-export const ProductSchema = z.object({
+export const CreateProductSchema = z.object({
   name: z.string()
     .min(1, 'Name ist erforderlich')
     .max(100, 'Name darf maximal 100 Zeichen haben'),
@@ -14,5 +14,4 @@ export const ProductSchema = z.object({
     .min(1, 'Kategorie ist erforderlich'),
 })
 
-// TypeScript-Typ wird automatisch aus dem Schema abgeleitet
-export type ProductInput = z.infer<typeof ProductSchema>
+export type CreateProductInput = z.infer<typeof CreateProductSchema>

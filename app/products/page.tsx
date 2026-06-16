@@ -10,7 +10,15 @@ export default async function ProductsPage() {
 
   return (
     <main className="max-w-5xl mx-auto px-4 py-10">
-      <h1 className="text-3xl font-bold mb-8">Produkte</h1>
+      <div className="flex items-center justify-between mb-8">
+        <h1 className="text-3xl font-bold">Produkte</h1>
+        <Link
+          href="/products/new"
+          className="bg-foreground text-background text-sm font-medium px-4 py-2 rounded-lg hover:opacity-90 transition-opacity"
+        >
+          + Neues Produkt
+        </Link>
+      </div>
 
       {products.length === 0 && (
         <p className="text-muted-foreground">Keine Produkte gefunden.</p>
