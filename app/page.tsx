@@ -1,3 +1,4 @@
+import Link from "next/link"
 import {
   CalendarDays,
   CheckCircle2,
@@ -78,25 +79,33 @@ export default async function Home({ searchParams }: HomeProps) {
             </div>
           </div>
 
-          <form className="flex w-full flex-col gap-2 sm:max-w-md sm:flex-row" action="/">
-            <label className="sr-only" htmlFor="email">
-              E-Mail-Adresse
-            </label>
-            <Input
-              id="email"
-              name="email"
-              type="email"
-              defaultValue={email}
-              placeholder="kunde@example.com"
-              required
-              aria-invalid={!lookup.success}
-              className="h-10 bg-white"
-            />
-            <Button className="h-10" type="submit">
-              <Search className="size-4" aria-hidden="true" />
-              Suchen
+          <div className="flex w-full flex-col gap-3 sm:max-w-md">
+            <Button asChild variant="outline" className="h-10 w-full">
+              <Link href="/cart">
+                <ShoppingBag className="size-4" aria-hidden="true" />
+                Zum Warenkorb
+              </Link>
             </Button>
-          </form>
+            <form className="flex flex-col gap-2 sm:flex-row" action="/">
+              <label className="sr-only" htmlFor="email">
+                E-Mail-Adresse
+              </label>
+              <Input
+                id="email"
+                name="email"
+                type="email"
+                defaultValue={email}
+                placeholder="kunde@example.com"
+                required
+                aria-invalid={!lookup.success}
+                className="h-10 bg-white"
+              />
+              <Button className="h-10" type="submit">
+                <Search className="size-4" aria-hidden="true" />
+                Suchen
+              </Button>
+            </form>
+          </div>
         </header>
 
         {!lookup.success ? (
@@ -203,11 +212,14 @@ export default async function Home({ searchParams }: HomeProps) {
                           <div>
                             <p className="font-medium">{item.product.name}</p>
                             <p className="text-sm text-stone-600">
-                              {item.product.category.name} · Menge {item.quantity}
+                              {item.product.category.name} · Menge{" "}
+                              {item.quantity}
                             </p>
                           </div>
                           <p className="font-medium">
-                            {currencyFormatter.format(item.price * item.quantity)}
+                            {currencyFormatter.format(
+                              item.price * item.quantity
+                            )}
                           </p>
                         </div>
                       ))}
