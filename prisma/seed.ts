@@ -1,6 +1,9 @@
-import { PrismaClient } from '../generated/prisma'
+import { PrismaBetterSqlite3 } from '@prisma/adapter-better-sqlite3'
+import { PrismaClient } from '../generated/prisma/client'
 
-const prisma = new PrismaClient()
+const datasourceUrl = process.env.DATABASE_URL ?? 'file:./prisma/dev.db'
+const adapter = new PrismaBetterSqlite3({ url: datasourceUrl })
+const prisma = new PrismaClient({ adapter })
 
 async function main() {
   // Kategorien
