@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { prisma } from '@/lib/prisma'
 
 export default async function ProductsPage() {
@@ -32,9 +33,11 @@ export default async function ProductsPage() {
             className="border rounded-xl p-5 hover:shadow-md transition-shadow flex flex-col gap-2"
           >
             {product.imageUrl && (
-              <img
+              <Image
                 src={product.imageUrl}
                 alt={product.name}
+                width={400}
+                height={192}
                 className="w-full h-48 object-cover rounded-lg"
               />
             )}

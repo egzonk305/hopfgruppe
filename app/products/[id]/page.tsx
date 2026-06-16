@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { notFound } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
 
@@ -27,10 +28,13 @@ export default async function ProductDetailPage({ params }: Props) {
       </Link>
 
       {product.imageUrl && (
-        <img
+        <Image
           src={product.imageUrl}
           alt={product.name}
+          width={800}
+          height={256}
           className="w-full h-64 object-cover rounded-xl mb-6"
+          priority
         />
       )}
 
