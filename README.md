@@ -1,31 +1,58 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Hopfgruppe Shop
+
+Full-Stack-Gruppenprojekt fuer Praktikum 9/10: ein kleiner Shop-Prototyp mit
+Produktdaten, Benutzerprofilen und Bestellhistorie.
+
+## Tech Stack
+
+- Next.js mit App Router und TypeScript
+- Prisma mit SQLite
+- Tailwind CSS und shadcn/ui
+- Zod fuer Laufzeitvalidierung
 
 ## Getting Started
 
-First, run the development server:
+Lege lokal eine `.env` mit der Datenbank-URL an:
 
 ```bash
+DATABASE_URL="file:./prisma/dev.db"
+```
+
+Dann das Projekt vorbereiten und starten:
+
+```bash
+npm install
+npx prisma generate
+npx prisma migrate dev
+npx prisma db seed
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Feature-Aufteilung
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- Person A: Produktkatalog mit Prisma-Modellen, Liste und Detaildaten
+- Person B: Warenkorb mit State-Management, UI und spaeteren Server Actions
+- Person C: Benutzer-Dashboard mit Profil, Bestellhistorie und Zod-validierter Suche
 
-## Learn More
+## Praktikum-9-Status
 
-To learn more about Next.js, take a look at the following resources:
+- Next.js-, Prisma-, Tailwind- und shadcn/ui-Scaffold vorhanden
+- Prisma-Schema, Migration und Seed-Daten vorhanden
+- Person-C-Feature auf Branch `feature-user-dashboard` begonnen
+- Zod-Schema fuer Dashboard-Eingaben vorhanden
+- PR/Review-Schritte muessen nach dem Push auf GitHub/GitLab erledigt werden
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Nuetzliche Befehle
+
+```bash
+npm run dev
+npm run lint
+npm run build
+```
+
+Der Seed legt den Beispielnutzer `benstr71@gmail.com` mit einer Bestellung an.
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 

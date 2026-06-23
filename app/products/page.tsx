@@ -25,7 +25,7 @@ export default async function ProductsPage({ searchParams }: Props) {
   const sortKey: SortKey = isSortKey(sort) ? sort : 'newest'
 
   const where: Prisma.ProductWhereInput = {
-    ...(q && { name: { contains: q, mode: 'insensitive' } }),
+    ...(q && { name: { contains: q } }),
     ...(category && { categoryId: category }),
   }
 
