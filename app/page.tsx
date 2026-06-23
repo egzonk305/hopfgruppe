@@ -185,7 +185,7 @@ export default async function Home({ searchParams }: HomeProps) {
               </Card>
             </section>
 
-            <section className="grid gap-6 lg:grid-cols-[1fr_320px]">
+            <section className="grid gap-6">
               <div className="space-y-4">
                 <div>
                   <h2 className="text-xl font-semibold tracking-normal">
@@ -243,30 +243,6 @@ export default async function Home({ searchParams }: HomeProps) {
                   </Card>
                 ))}
               </div>
-
-              <aside className="space-y-4">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Person-C Scope</CardTitle>
-                    <CardDescription>
-                      Status fuer den Praktikumsabgleich
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-3 text-sm">
-                    {[
-                      "Feature-Branch angelegt",
-                      "Dashboard-UI mit shadcn/ui",
-                      "Zod-Validierung fuer Eingaben",
-                      "Serverseitige Prisma-Abfrage",
-                    ].map((item) => (
-                      <div key={item} className="flex items-center gap-2">
-                        <CheckCircle2 className="size-4 text-emerald-700" />
-                        <span>{item}</span>
-                      </div>
-                    ))}
-                  </CardContent>
-                </Card>
-              </aside>
             </section>
           </>
         ) : null}
