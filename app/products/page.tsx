@@ -1,13 +1,44 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { prisma } from '@/lib/prisma'
+import type { Prisma } from '../../generated/prisma/client'
 
-export default async function ProductsPage() {
-  // Alle Produkte aus der Datenbank holen, inkl. Kategoriename
-  const products = await prisma.product.findMany({
-    include: { category: true },
-    orderBy: { createdAt: 'desc' },
-  })
+const SORT_OPTIONS = {
+  newest: { createdAt: 'desc' },
+  'price-asc': { price: 'asc' },
+  'price-desc': { price: 'desc' },
+  'name-asc': { name: 'asc' },
+} satisfies Record<string, Prisma.ProductOrderByWithRelationInput>
+
+type SortKey = keyof typeof SORT_OPTIONS
+
+function isSortKey(value: string): value is SortKey {
+  return value in SORT_OPTIONS
+}
+
+interface Props {
+  searchParams: Promise<{ q?: string; category?: string; sort?: string }>
+}
+
+export default async function ProductsPage({ searchParams }: Props) {
+  const { q = '', category = '', sort = 'newest' } = await searchParams
+  const sortKey: SortKey = isSortKey(sort) ? sort : 'newest'
+
+  const where: Prisma.ProductWhereInput = {
+    ...(q && { name: { contains: q, mode: 'insensitive' } }),
+    ...(category && { categoryId: category }),
+  }
+
+  const [products, categories] = await Promise.all([
+    prisma.product.findMany({
+      where,
+      include: { category: true },
+      orderBy: SORT_OPTIONS[sortKey],
+    }),
+    prisma.category.findMany({ orderBy: { name: 'asc' } }),
+  ])
+
+  const hasActiveFilters = q !== '' || category !== ''
 
   return (
     <main className="max-w-5xl mx-auto px-4 py-10">
@@ -21,8 +52,72 @@ export default async function ProductsPage() {
         </Link>
       </div>
 
+      <form className="flex flex-wrap items-end gap-3 mb-8" action="/products">
+        <div className="flex flex-col gap-1 flex-1 min-w-[180px]">
+          <label htmlFor="q" className="text-sm font-medium">Suche</label>
+          <input
+            id="q"
+            name="q"
+            type="text"
+            defaultValue={q}
+            placeholder="Produktname..."
+            className="border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+          />
+        </div>
+
+        <div className="flex flex-col gap-1">
+          <label htmlFor="category" className="text-sm font-medium">Kategorie</label>
+          <select
+            id="category"
+            name="category"
+            defaultValue={category}
+            className="border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring bg-background"
+          >
+            <option value="">Alle Kategorien</option>
+            {categories.map((cat) => (
+              <option key={cat.id} value={cat.id}>{cat.name}</option>
+            ))}
+          </select>
+        </div>
+
+        <div className="flex flex-col gap-1">
+          <label htmlFor="sort" className="text-sm font-medium">Sortierung</label>
+          <select
+            id="sort"
+            name="sort"
+            defaultValue={sortKey}
+            className="border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring bg-background"
+          >
+            <option value="newest">Neueste zuerst</option>
+            <option value="price-asc">Preis aufsteigend</option>
+            <option value="price-desc">Preis absteigend</option>
+            <option value="name-asc">Name (A-Z)</option>
+          </select>
+        </div>
+
+        <button
+          type="submit"
+          className="border rounded-lg px-4 py-2 text-sm font-medium hover:bg-accent transition-colors"
+        >
+          Filtern
+        </button>
+
+        {hasActiveFilters && (
+          <Link
+            href="/products"
+            className="text-sm text-muted-foreground hover:underline px-1 py-2"
+          >
+            Filter zurücksetzen
+          </Link>
+        )}
+      </form>
+
       {products.length === 0 && (
-        <p className="text-muted-foreground">Keine Produkte gefunden.</p>
+        <p className="text-muted-foreground">
+          {hasActiveFilters
+            ? 'Keine Produkte für diese Filter gefunden.'
+            : 'Keine Produkte gefunden.'}
+        </p>
       )}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
