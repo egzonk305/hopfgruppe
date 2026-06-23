@@ -12,6 +12,8 @@ interface Props {
   categories: { id: string; name: string }[]
 }
 
+const FIELD_ERROR_CLASS = 'text-sm text-red-500 animate-in fade-in slide-in-from-top-1'
+
 export default function ProductForm({ categories }: Props) {
   const router = useRouter()
 
@@ -51,7 +53,7 @@ export default function ProductForm({ categories }: Props) {
           className="border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
         />
         {form.formState.errors.name && (
-          <p className="text-sm text-red-500 motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-top-1">{form.formState.errors.name.message}</p>
+          <p className={FIELD_ERROR_CLASS}>{form.formState.errors.name.message}</p>
         )}
       </div>
 
@@ -75,7 +77,7 @@ export default function ProductForm({ categories }: Props) {
             className="border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
           />
           {form.formState.errors.price && (
-            <p className="text-sm text-red-500 motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-top-1">{form.formState.errors.price.message}</p>
+            <p className={FIELD_ERROR_CLASS}>{form.formState.errors.price.message}</p>
           )}
         </div>
 
@@ -87,7 +89,7 @@ export default function ProductForm({ categories }: Props) {
             className="border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
           />
           {form.formState.errors.stock && (
-            <p className="text-sm text-red-500 motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-top-1">{form.formState.errors.stock.message}</p>
+            <p className={FIELD_ERROR_CLASS}>{form.formState.errors.stock.message}</p>
           )}
         </div>
       </div>
@@ -104,7 +106,7 @@ export default function ProductForm({ categories }: Props) {
           ))}
         </select>
         {form.formState.errors.categoryId && (
-          <p className="text-sm text-red-500 motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-top-1">{form.formState.errors.categoryId.message}</p>
+          <p className={FIELD_ERROR_CLASS}>{form.formState.errors.categoryId.message}</p>
         )}
       </div>
 
