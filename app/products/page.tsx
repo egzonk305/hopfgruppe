@@ -113,7 +113,7 @@ export default async function ProductsPage({ searchParams }: Props) {
       </form>
 
       {products.length === 0 && (
-        <p className="text-muted-foreground">
+        <p className="text-muted-foreground animate-in fade-in">
           {hasActiveFilters
             ? 'Keine Produkte für diese Filter gefunden.'
             : 'Keine Produkte gefunden.'}
@@ -121,11 +121,12 @@ export default async function ProductsPage({ searchParams }: Props) {
       )}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {products.map((product) => (
+        {products.map((product, index) => (
           <Link
             key={product.id}
             href={`/products/${product.id}`}
-            className="border rounded-xl p-5 hover:shadow-md transition-shadow flex flex-col gap-2"
+            style={{ animationDelay: `${Math.min(index, 8) * 40}ms` }}
+            className="border rounded-xl p-5 hover:shadow-md hover:-translate-y-0.5 transition-all flex flex-col gap-2 animate-in fade-in slide-in-from-bottom-2 fill-mode-backwards"
           >
             {product.imageUrl && (
               <Image
