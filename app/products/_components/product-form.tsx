@@ -3,6 +3,8 @@
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'
+import { Loader2 } from 'lucide-react'
+import { toast } from 'sonner'
 import { CreateProductSchema, type CreateProductInput } from '@/lib/schemas/product'
 import { createProduct } from '@/app/products/actions'
 
@@ -25,9 +27,17 @@ export default function ProductForm({ categories }: Props) {
   })
 
   async function onSubmit(data: CreateProductInput) {
-    await createProduct(data)
-    router.push('/products')
-    router.refresh()
+    try {
+      await createProduct(data)
+      toast.success('Produkt erstellt', {
+        description: `"${data.name}" wurde erfolgreich angelegt.`,
+      })
+      router.push('/products')
+      router.refresh()
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'Unbekannter Fehler'
+      toast.error('Produkt konnte nicht erstellt werden', { description: message })
+    }
   }
 
   return (
@@ -41,7 +51,7 @@ export default function ProductForm({ categories }: Props) {
           className="border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
         />
         {form.formState.errors.name && (
-          <p className="text-sm text-red-500">{form.formState.errors.name.message}</p>
+          <p className="text-sm text-red-500 animate-in fade-in slide-in-from-top-1">{form.formState.errors.name.message}</p>
         )}
       </div>
 
@@ -65,7 +75,7 @@ export default function ProductForm({ categories }: Props) {
             className="border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
           />
           {form.formState.errors.price && (
-            <p className="text-sm text-red-500">{form.formState.errors.price.message}</p>
+            <p className="text-sm text-red-500 animate-in fade-in slide-in-from-top-1">{form.formState.errors.price.message}</p>
           )}
         </div>
 
@@ -77,7 +87,7 @@ export default function ProductForm({ categories }: Props) {
             className="border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
           />
           {form.formState.errors.stock && (
-            <p className="text-sm text-red-500">{form.formState.errors.stock.message}</p>
+            <p className="text-sm text-red-500 animate-in fade-in slide-in-from-top-1">{form.formState.errors.stock.message}</p>
           )}
         </div>
       </div>
@@ -94,15 +104,16 @@ export default function ProductForm({ categories }: Props) {
           ))}
         </select>
         {form.formState.errors.categoryId && (
-          <p className="text-sm text-red-500">{form.formState.errors.categoryId.message}</p>
+          <p className="text-sm text-red-500 animate-in fade-in slide-in-from-top-1">{form.formState.errors.categoryId.message}</p>
         )}
       </div>
 
       <button
         type="submit"
         disabled={form.formState.isSubmitting}
-        className="bg-foreground text-background rounded-lg py-2 text-sm font-medium hover:opacity-90 transition-opacity disabled:opacity-50"
+        className="bg-foreground text-background rounded-lg py-2 text-sm font-medium hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center justify-center gap-2"
       >
+        {form.formState.isSubmitting && <Loader2 className="size-4 animate-spin" />}
         {form.formState.isSubmitting ? 'Wird gespeichert...' : 'Produkt erstellen'}
       </button>
     </form>
