@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { CheckoutSchema, type CheckoutInput } from "@/schemas/cart";
 
@@ -81,6 +82,10 @@ export async function checkoutCart(input: CheckoutInput) {
 
     return createdOrder;
   });
+
+  // Produktbestände haben sich geändert – Produktseiten neu validieren
+  revalidatePath("/products");
+  revalidatePath("/products/[id]", "page");
 
   return {
     orderId: order.id,

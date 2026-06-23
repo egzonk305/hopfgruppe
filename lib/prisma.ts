@@ -1,23 +1,24 @@
 import { PrismaClient } from '../generated/prisma/client'
+import { PrismaLibSql } from '@prisma/adapter-libsql'
 
-function createPrismaClient(): PrismaClient {
-  if (process.env.TURSO_DATABASE_URL) {
-    // Produktion: Turso (LibSQL)
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const { PrismaLibSQL } = require('@prisma/adapter-libsql')
-    const adapter = new PrismaLibSQL({
-      url: process.env.TURSO_DATABASE_URL,
-      authToken: process.env.TURSO_AUTH_TOKEN,
-    })
-    return new PrismaClient({ adapter })
+function getDatabaseUrl() {
+  if (process.env.DATABASE_URL) {
+    return process.env.DATABASE_URL
   }
 
-  // Lokal: SQLite via better-sqlite3
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const { PrismaBetterSqlite3 } = require('@prisma/adapter-better-sqlite3')
-  const adapter = new PrismaBetterSqlite3({
-    url: process.env.DATABASE_URL ?? 'file:./dev.db',
+  if (process.env.VERCEL === '1') {
+    throw new Error('DATABASE_URL muss fuer Turso/Vercel gesetzt sein.')
+  }
+
+  return 'file:./prisma/dev.db'
+}
+
+function createPrismaClient(): PrismaClient {
+  const adapter = new PrismaLibSql({
+    url: getDatabaseUrl(),
+    authToken: process.env.DATABASE_AUTH_TOKEN,
   })
+
   return new PrismaClient({ adapter })
 }
 
