@@ -113,7 +113,7 @@ export default async function ProductsPage({ searchParams }: Props) {
       </form>
 
       {products.length === 0 && (
-        <p className="text-muted-foreground animate-in fade-in">
+        <p className="text-muted-foreground motion-safe:animate-in motion-safe:fade-in">
           {hasActiveFilters
             ? 'Keine Produkte für diese Filter gefunden.'
             : 'Keine Produkte gefunden.'}
@@ -126,7 +126,7 @@ export default async function ProductsPage({ searchParams }: Props) {
             key={product.id}
             href={`/products/${product.id}`}
             style={{ animationDelay: `${Math.min(index, 8) * 40}ms` }}
-            className="border rounded-xl p-5 hover:shadow-md hover:-translate-y-0.5 transition-all flex flex-col gap-2 animate-in fade-in slide-in-from-bottom-2 fill-mode-backwards"
+            className="border rounded-xl p-5 hover:shadow-md hover:-translate-y-0.5 transition-all flex flex-col gap-2 motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-2 motion-safe:fill-mode-backwards"
           >
             {product.imageUrl && (
               <Image

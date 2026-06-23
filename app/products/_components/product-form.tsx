@@ -51,7 +51,7 @@ export default function ProductForm({ categories }: Props) {
           className="border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
         />
         {form.formState.errors.name && (
-          <p className="text-sm text-red-500 animate-in fade-in slide-in-from-top-1">{form.formState.errors.name.message}</p>
+          <p className="text-sm text-red-500 motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-top-1">{form.formState.errors.name.message}</p>
         )}
       </div>
 
@@ -75,7 +75,7 @@ export default function ProductForm({ categories }: Props) {
             className="border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
           />
           {form.formState.errors.price && (
-            <p className="text-sm text-red-500 animate-in fade-in slide-in-from-top-1">{form.formState.errors.price.message}</p>
+            <p className="text-sm text-red-500 motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-top-1">{form.formState.errors.price.message}</p>
           )}
         </div>
 
@@ -87,7 +87,7 @@ export default function ProductForm({ categories }: Props) {
             className="border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
           />
           {form.formState.errors.stock && (
-            <p className="text-sm text-red-500 animate-in fade-in slide-in-from-top-1">{form.formState.errors.stock.message}</p>
+            <p className="text-sm text-red-500 motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-top-1">{form.formState.errors.stock.message}</p>
           )}
         </div>
       </div>
@@ -104,7 +104,7 @@ export default function ProductForm({ categories }: Props) {
           ))}
         </select>
         {form.formState.errors.categoryId && (
-          <p className="text-sm text-red-500 animate-in fade-in slide-in-from-top-1">{form.formState.errors.categoryId.message}</p>
+          <p className="text-sm text-red-500 motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-top-1">{form.formState.errors.categoryId.message}</p>
         )}
       </div>
 
@@ -113,7 +113,7 @@ export default function ProductForm({ categories }: Props) {
         disabled={form.formState.isSubmitting}
         className="bg-foreground text-background rounded-lg py-2 text-sm font-medium hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center justify-center gap-2"
       >
-        {form.formState.isSubmitting && <Loader2 className="size-4 animate-spin" />}
+        {form.formState.isSubmitting && <Loader2 aria-hidden="true" className="size-4 animate-spin" />}
         {form.formState.isSubmitting ? 'Wird gespeichert...' : 'Produkt erstellen'}
       </button>
     </form>
