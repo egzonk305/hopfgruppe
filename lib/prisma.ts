@@ -1,24 +1,8 @@
 import { PrismaClient } from '../generated/prisma/client'
-import { PrismaLibSql } from '@prisma/adapter-libsql'
-
-function getDatabaseUrl() {
-  if (process.env.DATABASE_URL) {
-    return process.env.DATABASE_URL
-  }
-
-  if (process.env.VERCEL === '1') {
-    throw new Error('DATABASE_URL muss fuer Turso/Vercel gesetzt sein.')
-  }
-
-  return 'file:./prisma/dev.db'
-}
+import { PrismaNeon } from '@prisma/adapter-neon'
 
 function createPrismaClient(): PrismaClient {
-  const adapter = new PrismaLibSql({
-    url: getDatabaseUrl(),
-    authToken: process.env.DATABASE_AUTH_TOKEN,
-  })
-
+  const adapter = new PrismaNeon({ connectionString: process.env.DATABASE_URL! })
   return new PrismaClient({ adapter })
 }
 
