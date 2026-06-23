@@ -3,7 +3,14 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Hopfgruppe Shop",
-  description: "Gruppenprojekt Praktikum 9",
+  description:
+    "Full-Stack-Gruppenprojekt fuer Praktikum 10 mit Caching, Performance-Optimierung und Deployment-Vorbereitung.",
+  openGraph: {
+    title: "Hopfgruppe Shop",
+    description:
+      "Shop-Prototyp mit Produktkatalog, Warenkorb, Benutzer-Dashboard und Prisma-Datenbank.",
+    type: "website",
+  },
 };
 
 export default function RootLayout({

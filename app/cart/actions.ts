@@ -1,5 +1,7 @@
 "use server";
 
+import { revalidatePath, revalidateTag } from "next/cache";
+
 import { prisma } from "@/lib/prisma";
 import { CheckoutSchema, type CheckoutInput } from "@/schemas/cart";
 
@@ -81,6 +83,10 @@ export async function checkoutCart(input: CheckoutInput) {
 
     return createdOrder;
   });
+
+  revalidatePath("/");
+  revalidatePath("/cart");
+  revalidateTag("user-dashboard", "max");
 
   return {
     orderId: order.id,

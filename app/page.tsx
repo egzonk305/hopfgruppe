@@ -30,6 +30,8 @@ type HomeProps = {
   }>
 }
 
+export const revalidate = 60
+
 const currencyFormatter = new Intl.NumberFormat("de-DE", {
   style: "currency",
   currency: "EUR",
@@ -40,6 +42,16 @@ const dateFormatter = new Intl.DateTimeFormat("de-DE", {
   month: "2-digit",
   year: "numeric",
 })
+
+function formatDate(value: Date | string | number) {
+  const date = value instanceof Date ? value : new Date(value)
+
+  if (Number.isNaN(date.getTime())) {
+    return "Datum unbekannt"
+  }
+
+  return dateFormatter.format(date)
+}
 
 export default async function Home({ searchParams }: HomeProps) {
   const params = await searchParams
@@ -194,7 +206,7 @@ export default async function Home({ searchParams }: HomeProps) {
                           </CardTitle>
                           <CardDescription className="flex items-center gap-2">
                             <CalendarDays className="size-4" />
-                            {dateFormatter.format(order.createdAt)}
+                            {formatDate(order.createdAt)}
                           </CardDescription>
                         </div>
                         <div className="inline-flex w-fit items-center gap-2 rounded-lg bg-emerald-50 px-3 py-1 text-sm font-medium text-emerald-900">

@@ -1,6 +1,13 @@
 "use client";
 
-import { Minus, Plus, ShoppingCart, Trash2 } from "lucide-react";
+import {
+  AlertCircle,
+  CheckCircle2,
+  Minus,
+  Plus,
+  ShoppingCart,
+  Trash2,
+} from "lucide-react";
 import { useMemo, useState, useTransition } from "react";
 
 import { checkoutCart } from "@/app/cart/actions";
@@ -51,6 +58,9 @@ function formatPrice(value: number) {
 export function CartClient({ products }: { products: Product[] }) {
   const [cart, setCart] = useState<CartLine[]>([]);
   const [message, setMessage] = useState<string | null>(null);
+  const [messageTone, setMessageTone] = useState<"info" | "error" | "success">(
+    "info"
+  );
   const [result, setResult] = useState<CheckoutResult | null>(null);
   const [isPending, startTransition] = useTransition();
 
@@ -62,6 +72,7 @@ export function CartClient({ products }: { products: Product[] }) {
   function addProduct(product: Product) {
     setResult(null);
     setMessage(null);
+    setMessageTone("info");
     setCart((current) => {
       const existing = current.find((item) => item.productId === product.id);
 
@@ -92,6 +103,7 @@ export function CartClient({ products }: { products: Product[] }) {
   function updateQuantity(productId: string, quantity: number) {
     setResult(null);
     setMessage(null);
+    setMessageTone("info");
     setCart((current) =>
       current.map((item) =>
         item.productId === productId
@@ -107,6 +119,7 @@ export function CartClient({ products }: { products: Product[] }) {
   function removeProduct(productId: string) {
     setResult(null);
     setMessage(null);
+    setMessageTone("info");
     setCart((current) => current.filter((item) => item.productId !== productId));
   }
 
@@ -120,6 +133,7 @@ export function CartClient({ products }: { products: Product[] }) {
 
     if (!validation.success) {
       setMessage(validation.error.issues[0]?.message ?? "Warenkorb ungueltig.");
+      setMessageTone("error");
       return;
     }
 
@@ -129,6 +143,7 @@ export function CartClient({ products }: { products: Product[] }) {
 
         setCart([]);
         setMessage("Bestellung wurde angelegt.");
+        setMessageTone("success");
         setResult(checkoutResult);
       } catch (error) {
         setMessage(
@@ -136,6 +151,7 @@ export function CartClient({ products }: { products: Product[] }) {
             ? error.message
             : "Checkout konnte nicht abgeschlossen werden."
         );
+        setMessageTone("error");
       }
     });
   }
@@ -150,37 +166,48 @@ export function CartClient({ products }: { products: Product[] }) {
           </p>
         </div>
 
-        <div className="grid gap-4 sm:grid-cols-2">
-          {products.map((product) => (
-            <Card key={product.id}>
-              <CardHeader>
-                <CardTitle>{product.name}</CardTitle>
-                <CardDescription>{product.category.name}</CardDescription>
-                <CardAction className="font-medium">
-                  {formatPrice(product.price)}
-                </CardAction>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <p className="min-h-10 text-sm text-muted-foreground">
-                  {product.description ?? "Keine Beschreibung vorhanden."}
-                </p>
-                <div className="flex items-center justify-between gap-3">
-                  <span className="text-sm text-muted-foreground">
-                    {product.stock} verfuegbar
-                  </span>
-                  <Button
-                    type="button"
-                    onClick={() => addProduct(product)}
-                    disabled={product.stock <= 0}
-                  >
-                    <ShoppingCart />
-                    Hinzufuegen
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+        {products.length === 0 ? (
+          <Card className="border-dashed">
+            <CardHeader>
+              <CardTitle>Keine Produkte vorhanden</CardTitle>
+              <CardDescription>
+                Seed-Daten fehlen noch oder die Datenbank ist leer.
+              </CardDescription>
+            </CardHeader>
+          </Card>
+        ) : (
+          <div className="grid gap-4 sm:grid-cols-2">
+            {products.map((product) => (
+              <Card key={product.id}>
+                <CardHeader>
+                  <CardTitle>{product.name}</CardTitle>
+                  <CardDescription>{product.category.name}</CardDescription>
+                  <CardAction className="font-medium">
+                    {formatPrice(product.price)}
+                  </CardAction>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <p className="min-h-10 text-sm text-muted-foreground">
+                    {product.description ?? "Keine Beschreibung vorhanden."}
+                  </p>
+                  <div className="flex items-center justify-between gap-3">
+                    <span className="text-sm text-muted-foreground">
+                      {product.stock} verfuegbar
+                    </span>
+                    <Button
+                      type="button"
+                      onClick={() => addProduct(product)}
+                      disabled={product.stock <= 0 || isPending}
+                    >
+                      <ShoppingCart />
+                      Hinzufuegen
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        )}
       </section>
 
       <aside className="space-y-4 lg:sticky lg:top-6 lg:self-start">
@@ -274,7 +301,26 @@ export function CartClient({ products }: { products: Product[] }) {
             </div>
 
             {message && (
-              <p className="rounded-lg bg-muted p-3 text-sm text-muted-foreground">
+              <p
+                className={
+                  messageTone === "error"
+                    ? "flex gap-2 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-900"
+                    : messageTone === "success"
+                      ? "flex gap-2 rounded-lg border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-900"
+                      : "flex gap-2 rounded-lg bg-muted p-3 text-sm text-muted-foreground"
+                }
+              >
+                {messageTone === "error" ? (
+                  <AlertCircle
+                    className="mt-0.5 size-4 shrink-0"
+                    aria-hidden="true"
+                  />
+                ) : messageTone === "success" ? (
+                  <CheckCircle2
+                    className="mt-0.5 size-4 shrink-0"
+                    aria-hidden="true"
+                  />
+                ) : null}
                 {message}
               </p>
             )}
